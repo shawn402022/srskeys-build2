@@ -1,16 +1,20 @@
+import { Midi } from "tonal";
+//const { Midi } = require("tonal")
+
+
+
 export default function StartButton() {
 // get access to web audio api //
-  //window.AudioContext = window.AudioContext || Window.webKitAudioContext
+  window.AudioContext = window.AudioContext || Window.webKitAudioContext
 
   let ctx = new AudioContext()
 
-  //function audioCtx() {
-    //StartButton.onClick = beginLearn
-  //}
-
-  //function beginLearn(){
-    //ctx = new AudioContext
-  //}
+  function midiToFreq(number) {
+    const a = 440
+    return(a/32)*(2 **((number-9) / 12))
+    
+  }
+ 
  
 
   //```Checking to see if the browser accepts midi  ```
@@ -32,12 +36,15 @@ export default function StartButton() {
     const command = input.data[0]
     const note = input.data[1]
     const velocity = input.data[2]
+    
+    
 
 
     switch(command) {
       case 144: //note on
       if(velocity > 0) {
         noteOn(note, velocity)
+        
       } else {
         noteOff(note)
       }
@@ -47,27 +54,38 @@ export default function StartButton() {
       break
     }
 
-    ctx = new AudioContext()
-    const osc = ctx.createOscillator()
-    osc.type = "sine"
-    osc.frequency.value = '440'
 
-    osc.connect(ctx.destination)
-    osc.start()
     
 
     //console.log(osc)
   } 
+
+
   
   function noteOn(note, velocity) {
     console.log(note, velocity)
+    ctx = new AudioContext()
+    const osc = ctx.createOscillator()
+    const oscGain = ctx.createGain()
     
-
+    oscGain.gain.value = 0.33
+    osc.type = "sine"
+    osc.frequency.value = Midi.midiToFreq(note)
+    
+    
+    osc.connect(oscGain)
+    oscGain.connect(ctx.destination)
+    osc.start()
+    
+ 
     
   }
 
+  
+
   function noteOff(note) {
     console.log(note)
+    //osc.stop()
   }
 
   function updateDevices(event) {
