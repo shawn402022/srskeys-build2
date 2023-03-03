@@ -2,7 +2,7 @@ export default function StartButton() {
 // get access to web audio api //
   //window.AudioContext = window.AudioContext || Window.webKitAudioContext
 
-  let ctx = new AudioContext
+  let ctx = new AudioContext()
 
   //function audioCtx() {
     //StartButton.onClick = beginLearn
@@ -46,19 +46,22 @@ export default function StartButton() {
       noteOff(note)
       break
     }
-  } 
-  
-  function noteOn(note, velocity) {
-    console.log(note, velocity)
-    ctx = new AudioContext
+
+    ctx = new AudioContext()
     const osc = ctx.createOscillator()
     osc.type = "sine"
     osc.frequency.value = '440'
 
     osc.connect(ctx.destination)
     osc.start()
+    
 
-    console.log(osc)
+    //console.log(osc)
+  } 
+  
+  function noteOn(note, velocity) {
+    console.log(note, velocity)
+    
 
     
   }
@@ -75,13 +78,17 @@ export default function StartButton() {
     console.log('could not connect')
   }
 
-  return(
-    <div className="button">
+  const clickHandler = () => console.log('clicked')
 
-    </div>
+  return(
+    <button onClick={clickHandler}>
+        Start
+    </button>
   )
 
 }
+
+StartButton()
 
 
 
